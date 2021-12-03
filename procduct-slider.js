@@ -7717,7 +7717,7 @@
           type: "post",
           dataType: "JSON",
           async: false,
-          data: { id: id, shop: 'tien-store-theme-2.myshopify.com' },
+          data: { id: id, shop: shop },
           success: function (response) {
             var config = response.data.slider.config;
             var list_products = response.data.slider.products;
