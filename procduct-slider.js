@@ -7739,7 +7739,7 @@
   			}, 1400, "linear", function() {
 					opacity:0,
     			siblings_preload.hide();
-				$('#'+id_section).parent().find('.simesy-section-title').removeClass('preloader')
+				siblings_preload.siblings('.simesy-section-title').removeClass('preloader')
   			});
         }
         if (id_section != "" && layout_present == "slider") {
@@ -8632,7 +8632,7 @@ border-color:${nav_border_hover};
       ) {
         if (carousel_ticker_mode == "false") {
           css += `#simesy-slider-section.simesy-slider-section-${id}{
-padding-top:46px;
+padding-top:56px;
 }`;
         }
 
@@ -9044,7 +9044,7 @@ border-color: ${add_to_cart_border_hover_color};
       css += `
 #simesy-slider-section.simesy-slider-section-${id} .simesy-cart-button a.button:not(.sp-wqvpro-view-button):not(.sp-wqv-view-button) {
 font-size: ${add_cart_type_font_size}px;
-line-height: ${add_cart_type_line_height}px;
+line-height: ${add_cart_type_line_height}px !important;
 text-transform: ${add_cart_type_text_transform};
 letter-spacing: ${add_cart_type_letter_spacing}px;
 text-align: ${add_cart_type_text_align};
@@ -9058,6 +9058,9 @@ text-align: ${add_cart_type_text_align};
 color: ${add_to_cart_button_color};
 background-color: ${add_to_cart_button_bg};
 border-color: ${add_to_cart_border_color};
+}
+#simesy-slider-section.simesy-slider-section-${id} a.button.sp-wqv-view-button.sp-simesy-wqv-button {
+ color: ${add_to_cart_button_color}      
 }`;
       if (add_to_cart_font_load) {
         var font_normal =
@@ -9339,29 +9342,32 @@ background-color: ${product_overlay_bg};
 color: ${config.product_name_typography.hover_color};
 };`;
     }
-
+ 	var product_info_border_all = config.product_area_border.all,
+        product_info_border_color = config.product_area_border.color,
+        product_info_border_style = config.product_area_border.style,
+        product_info_border_hover_color = config.product_area_border.hover_color;
     if (theme_style == "theme_twelve") {
       css += `.simesy-slider-section #simesy-product-slider-${id}.simesy-product-section .simesy-product .simesy-product-data{
-border-top: ${product_image_border_all}px ${product_image_border_style} ${product_image_border_color};
-background-image: -webkit-gradient(linear, 0 0, 0 100%, from(${product_image_border_color}), to(transparent));
-background-image: -webkit-linear-gradient(${product_image_border_color}, transparent);
-background-image: -moz-linear-gradient(${product_image_border_color}, transparent), -moz-linear-gradient(${product_image_border_color}, transparent);
-background-image: -o-linear-gradient(${product_image_border_color}, transparent), -o-linear-gradient(${product_image_border_color}, transparent);
-background-image: linear-gradient(${product_image_border_color}, transparent), linear-gradient(${product_image_border_color}, transparent);
--moz-background-size: ${product_image_border_all}px 100%;
-background-size: ${product_image_border_all}px 100%;
+border-top: ${product_info_border_all}px ${product_info_border_style} ${product_info_border_color};
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(${product_info_border_color}), to(transparent));
+background-image: -webkit-linear-gradient(${product_info_border_color}, transparent);
+background-image: -moz-linear-gradient(${product_info_border_color}, transparent), -moz-linear-gradient(${product_info_border_color}, transparent);
+background-image: -o-linear-gradient(${product_info_border_color}, transparent), -o-linear-gradient(${product_info_border_color}, transparent);
+background-image: linear-gradient(${product_info_border_color}, transparent), linear-gradient(${product_info_border_color}, transparent);
+-moz-background-size: ${product_info_border_all}px 100%;
+background-size: ${product_info_border_all}px 100%;
 background-position: 0 0, 100% 0;
 background-repeat: no-repeat;
-padding-left: ${product_image_border_all}px;
-padding-right: ${product_image_border_all}px;
+padding-left: ${product_info_border_all}px;
+padding-right: ${product_info_border_all}px;
 }
 .simesy-slider-section #simesy-product-slider-${id}.simesy-product-section .simesy-product .simesy-product-data:hover{
-border-color: ${product_image_border_all}px;
-background-image: -webkit-gradient(linear, 0 0, 0 100%, from(${product_image_border_all}px), to(transparent));
-background-image: -webkit-linear-gradient(${product_image_border_color}, transparent);
-background-image: -moz-linear-gradient(${product_image_border_color}, transparent), -moz-linear-gradient(${product_image_border_color}, transparent);
-background-image: -o-linear-gradient(${product_image_border_color}, transparent), -o-linear-gradient(${product_image_border_color}, transparent);
-background-image: linear-gradient(${product_image_border_color}, transparent), linear-gradient(${product_image_border_color}, transparent);
+border-color: ${product_info_border_hover_color};
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(${product_info_border_hover_color}), to(transparent));
+background-image: -webkit-linear-gradient(${product_info_border_hover_color}, transparent);
+background-image: -moz-linear-gradient(${product_info_border_hover_color}, transparent), -moz-linear-gradient(${product_info_border_hover_color}, transparent);
+background-image: -o-linear-gradient(${product_info_border_hover_color}, transparent), -o-linear-gradient(${product_info_border_hover_color}, transparent);
+background-image: linear-gradient(${product_info_border_hover_color}, transparent), linear-gradient(${product_info_border_hover_color}, transparent);
 }`;
     }
 
@@ -9805,6 +9811,9 @@ var class_preload = pre_loader ? 'preloader' : '';
       var avai = value.status == "active" ? true : false;
       var avai_stock = true;
       var quantity_stock = 0;
+      var price_max = 0,price_min = 0;
+      var array_price =[];
+      var check_sale = false;
       $.each(value.variants,function(i,variant){
         if(variant.inventory_policy == 'continue' || variant.inventory_management != 'shopify'){
           return false;
@@ -9813,6 +9822,24 @@ var class_preload = pre_loader ? 'preloader' : '';
           avai_stock = quantity_stock <= 0 ? false : true;
         }
       })
+      $.each(value.variants,function(i,variant){
+        if(variant.compare_at_price != null){
+          array_price.push(variant.compare_at_price);
+          check_sale = true;
+        }else{
+          array_price.push(variant.price);
+        }
+      })
+      function maxValue(array_price) {
+  		return array_price.reduce((max, val) => parseFloat(max) > parseFloat(val) ? max : val)
+	  }
+      if(check_sale){
+      	price_max = maxValue(array_price);
+      }
+      function minValue(array_price) {
+  		return array_price.reduce((max, val) => parseFloat(max) < parseFloat(val) ? max : val)
+	  }
+      price_min = minValue(array_price);
       if(avai){
       data_all.push({
         status: avai,
@@ -9821,8 +9848,8 @@ var class_preload = pre_loader ? 'preloader' : '';
         url: "/products/" + value.handle,
         title: value.title,
         description: value.body_html,
-        price: value.variants[0].price,
-        compare_price: value.variants[0].compare_at_price,
+        price: price_min,
+        compare_price: price_max,
         id: value.variants[0].id,
         variant: value.variants.length,
       });
@@ -9855,7 +9882,9 @@ var class_preload = pre_loader ? 'preloader' : '';
 
           return src.replace(/\.jpg|\.png|\.gif|\.jpeg/g, function (match) {
             return "_" + size + match;
+            
           });
+                    
         }
         var href_image = product_data.url;
         if (image_lightbox) {
@@ -9890,10 +9919,11 @@ var class_preload = pre_loader ? 'preloader' : '';
           '" class="simesy-product-image sp-simesy-lightbox ' +
           image_gray_scale +
           '"><img src="' +
-          imgURL(product_data.image, image_size_w + "x" + image_size_h) +
+          imgURL(product_data.image, image_size, image_size_w + "x" + image_size_h) +
           '" class="simesy-product-img" ' +
           attr_title +
           "/></a></div>";
+  
         if (theme_style != "theme_twenty_two") {
           if (!product_data.available && out_of_stock_ribbon) {
             html_img +=
@@ -10000,7 +10030,8 @@ var class_preload = pre_loader ? 'preloader' : '';
         html_theme +=
           '<div class="product-details"><div class="product-details-inner">' +
           html_title +
-          html_price;
+          html_price +
+          html_des;
         if (add_to_cart_button) {
           html_theme +=
             '<div class="simesy-cart-button"><p class="product woocommerce add_to_cart_inline ">';
@@ -10046,6 +10077,7 @@ var class_preload = pre_loader ? 'preloader' : '';
           '<div class="product-details"><div class="product-details-inner">' +
           html_title +
           html_price +
+          html_des+
           "</div></div";
       } else if (theme_style == "theme_six") {
         html_theme += '<div class="simesy-product-image-area">' + html_img;
@@ -10070,6 +10102,7 @@ var class_preload = pre_loader ? 'preloader' : '';
           '<div class="product-details"><div class="product-details-inner">' +
           html_title +
           html_price +
+          html_des+
           "</div></div";
       } else if (theme_style == "theme_seven") {
         html_theme +=
@@ -10120,6 +10153,7 @@ var class_preload = pre_loader ? 'preloader' : '';
           '<div class="product-details"><div class="product-details-inner">' +
           html_title +
           html_price +
+          html_des+
           "</div></div>";
       } else if (theme_style == "theme_nine") {
         html_theme += '<div class="simesy-product-image-area">' + html_img + "";
@@ -10144,6 +10178,7 @@ var class_preload = pre_loader ? 'preloader' : '';
           '<div class="product-details"><div class="product-details-inner">' +
           html_title +
           html_price +
+          html_des+
           "</div></div>";
       } else if (theme_style == "theme_eleven") {
         html_theme +=
@@ -10203,6 +10238,7 @@ var class_preload = pre_loader ? 'preloader' : '';
           '<div class="product-details-inner">' +
           html_title +
           html_price +
+          html_des +
           "</div>";
         if (add_to_cart_button) {
           html_theme +=
@@ -10240,6 +10276,7 @@ if(product_data.variant == 1){
           '<div class="product-details"><div class="product-details-inner">' +
           html_title +
           html_price +
+          html_des + 
           "</div></div>";
       } else if (theme_style == "theme_sixteen") {
         html_theme +=
@@ -10285,6 +10322,7 @@ if(product_data.variant == 1){
           '<div class="product-details"><div class="product-details-inner">' +
           html_title +
           html_price +
+          html_des +
           "</div></div>";
       } else if (theme_style == "theme_eighteen") {
         //html_theme += html_img;
@@ -10443,7 +10481,8 @@ if(product_data.variant == 1){
         html_theme +=
           '<div class="product-details"><div class="product-details-inner">' +
           html_title +
-          html_price;
+          html_price +
+          html_des;
         if (add_to_cart_button) {
           html_theme +=
             '<div class="simesy-cart-button"><p class="product woocommerce add_to_cart_inline ">';
@@ -10464,7 +10503,8 @@ if(product_data.variant == 1){
         html_theme +=
           '<div class="product-details"><div class="product-details-inner">' +
           html_title +
-          html_price;
+          html_price +
+          html_des;
         if (add_to_cart_button) {
           html_theme +=
             '<div class="simesy-cart-button"><p class="product woocommerce add_to_cart_inline ">';
